@@ -16,7 +16,7 @@ function Home() {
     <>
       <div className="container mt-5">
         <span className="mx-3">
-          <b>Wow Fetch On Count - {count}</b>
+          <b>GITHUB - Fetch On Count - {count}</b>
         </span>
         <button
           className="btn btn-primary btn-sm"
