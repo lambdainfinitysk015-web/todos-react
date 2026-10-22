@@ -55,6 +55,24 @@ export const deleteTodo = createAsyncThunk(
   },
 );
 
+export const completedTodo = createAsyncThunk(
+  "todo/completedTodo",
+  async (todo, { dispatch }) => {
+    const response = await fetch(`${base_url}/completedTodo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
 const todoReducer = createSlice({
   name: "todo",
   initialState: {
@@ -94,6 +112,17 @@ const todoReducer = createSlice({
       })
       .addCase(deleteTodo.rejected, (state, action) => {
         console.log("deleteTodo rejected", action);
+      })
+
+      // Completed Todo
+      .addCase(completedTodo.pending, (state, action) => {
+        console.log("completedTodo pending", action);
+      })
+      .addCase(completedTodo.fulfilled, (state, action) => {
+        console.log("completedTodo fulfilled", action);
+      })
+      .addCase(completedTodo.rejected, (state, action) => {
+        console.log("completedTodo rejected", action);
       });
   },
 });
