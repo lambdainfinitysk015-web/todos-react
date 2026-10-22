@@ -45,47 +45,56 @@ function TodosPage() {
 
   return (
     <>
-      <div className="container mt-5 col-md-6 col-offset-3">
-        <div className="card">
-          <div className="card-body">
-            <h4 className="text-center">Todos</h4>
-            <div className="row">
-              <div className="col-md-10 mt-3">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Add todo"
-                  {...register("todo")}
-                />
-                {errors.todo && (
-                  <p className="text-danger mx-1 mt-2">{errors.todo.message}</p>
-                )}
-              </div>
+      <div className="container mt-3 mt-md-5">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-6">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="text-center">Todos</h4>
 
-              <div className="col-md-2 mt-3">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  onClick={handleSubmit(handleAddTodo)}
-                >
-                  Add
-                </button>
-              </div>
-            </div>
+                {/* Add Todo Form */}
+                <div className="row g-2 mt-3">
+                  <div className="col-9 col-md-10">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Add todo"
+                      {...register("todo")}
+                    />
 
-            <div className="row">
-              {todos.length === 0 && (
-                <h6 className="text-center mt-3">No todos yet!!!</h6>
-              )}
-              {todos.length > 0 &&
-                todos.map((row, index) => {
-                  return (
-                    <div key={index} className="col-md-12 mt-2">
+                    {errors.todo && (
+                      <p className="text-danger mx-1 mt-2">
+                        {errors.todo.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="col-3 col-md-2">
+                    <button
+                      type="submit"
+                      className="btn btn-primary w-100"
+                      onClick={handleSubmit(handleAddTodo)}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* Todo List */}
+                <div className="row mt-2">
+                  {todos.length === 0 && (
+                    <div className="col-12">
+                      <h6 className="text-center mt-3">No todos yet!!!</h6>
+                    </div>
+                  )}
+
+                  {todos.map((row) => (
+                    <div key={row._id} className="col-12 mt-2">
                       <div className="card">
-                        <div className="card-body">
-                          <div className="row">
+                        <div className="card-body py-3 px-3">
+                          <div className="row align-items-center g-2">
                             <div
-                              className="col-md-10"
+                              className="col-8 col-md-10 text-break"
                               style={{
                                 textDecoration: row.completed
                                   ? "line-through"
@@ -95,17 +104,28 @@ function TodosPage() {
                               {row.todo}
                             </div>
 
-                            <div className="col-md-1">
+                            <div className="col-2 col-md-1 text-center">
                               <i
-                                className={`bi  ${!row.completed ? "bi-check-circle-fill" : "bi-x-circle"} me-2`}
-                                style={{ color: "green", cursor: "pointer" }}
+                                className={`bi ${
+                                  !row.completed
+                                    ? "bi-check-circle-fill"
+                                    : "bi-x-circle"
+                                }`}
+                                style={{
+                                  color: row.completed ? "red" : "green",
+                                  cursor: "pointer",
+                                }}
                                 onClick={() => handleCompleteTodo(row)}
                               ></i>
                             </div>
-                            <div className="col-md-1">
+
+                            <div className="col-2 col-md-1 text-center">
                               <i
-                                className="bi bi-trash me-2"
-                                style={{ color: "red", cursor: "pointer" }}
+                                className="bi bi-trash"
+                                style={{
+                                  color: "red",
+                                  cursor: "pointer",
+                                }}
                                 onClick={() => handleDeleteTodo(row)}
                               ></i>
                             </div>
@@ -113,8 +133,9 @@ function TodosPage() {
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
