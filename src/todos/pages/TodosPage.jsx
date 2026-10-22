@@ -6,6 +6,7 @@ import {
   addTodo,
   fetchTodos,
   deleteTodo,
+  completedTodo,
 } from "../../store-features/todos/todoSlice";
 import { useEffect } from "react";
 
@@ -36,6 +37,10 @@ function TodosPage() {
 
   const handleDeleteTodo = (data) => {
     dispatch(deleteTodo(data));
+  };
+
+  const handleCompleteTodo = (data) => {
+    dispatch(completedTodo(data));
   };
 
   return (
@@ -69,26 +74,47 @@ function TodosPage() {
             </div>
 
             <div className="row">
-              {todos.map((row, index) => {
-                return (
-                  <div key={index} className="col-md-12 mt-2">
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="row">
-                          <div className="col-md-11">{row.todo}</div>
-                          <div className="col-md-1">
-                            <i
-                              className="bi bi-trash me-2"
-                              style={{ color: "red", cursor: "pointer" }}
-                              onClick={() => handleDeleteTodo(row)}
-                            ></i>
+              {todos.length === 0 && (
+                <h6 className="text-center mt-3">No todos yet!!!</h6>
+              )}
+              {todos.length > 0 &&
+                todos.map((row, index) => {
+                  return (
+                    <div key={index} className="col-md-12 mt-2">
+                      <div className="card">
+                        <div className="card-body">
+                          <div className="row">
+                            <div
+                              className="col-md-10"
+                              style={{
+                                textDecoration: row.completed
+                                  ? "line-through"
+                                  : "none",
+                              }}
+                            >
+                              {row.todo}
+                            </div>
+
+                            <div className="col-md-1">
+                              <i
+                                className={`bi  ${!row.completed ? "bi-check-circle-fill" : "bi-x-circle"} me-2`}
+                                style={{ color: "green", cursor: "pointer" }}
+                                onClick={() => handleCompleteTodo(row)}
+                              ></i>
+                            </div>
+                            <div className="col-md-1">
+                              <i
+                                className="bi bi-trash me-2"
+                                style={{ color: "red", cursor: "pointer" }}
+                                onClick={() => handleDeleteTodo(row)}
+                              ></i>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         </div>
