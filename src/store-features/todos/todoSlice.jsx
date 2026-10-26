@@ -77,19 +77,37 @@ const todoReducer = createSlice({
   name: "todo",
   initialState: {
     todos: [],
+    dialog: false,
+    deleteInfo: null,
+    linearProgressLoader: false,
+  },
+
+  reducers: {
+    openDialog(state) {
+      state.dialog = true;
+    },
+    closeDialog(state) {
+      state.dialog = false;
+    },
+    setDeleteInfo(state, action) {
+      state.deleteInfo = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       // Fetch
       .addCase(fetchTodos.pending, (state, action) => {
         console.log("fetchTodos pending", action);
+        state.linearProgressLoader = true;
       })
       .addCase(fetchTodos.fulfilled, (state, action) => {
         console.log("fetchTodos fulfilled", action);
         state.todos = action.payload.data;
+        state.linearProgressLoader = false;
       })
       .addCase(fetchTodos.rejected, (state, action) => {
         console.log("fetchTodos rejected", action);
+        state.linearProgressLoader = false;
       })
 
       // Add Todo
@@ -127,4 +145,5 @@ const todoReducer = createSlice({
   },
 });
 
+export const { openDialog, closeDialog, setDeleteInfo } = todoReducer.actions;
 export default todoReducer.reducer;
