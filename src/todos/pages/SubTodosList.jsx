@@ -25,7 +25,7 @@ function SubTodosList({ subTodos = [], mainTodoId }) {
         return (
           <div key={index}>
             <ul className="list-group">
-              <li className="list-group-item">
+              <li className="list-group-item" style={{ paddingRight: "30px" }}>
                 <div className="row">
                   <div
                     className="col-10 col-md-10 text-break"
