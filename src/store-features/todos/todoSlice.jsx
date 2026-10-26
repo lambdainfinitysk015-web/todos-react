@@ -73,6 +73,62 @@ export const completedTodo = createAsyncThunk(
   },
 );
 
+export const addSubTodo = createAsyncThunk(
+  "todo/addSubTodo",
+  async ({ subTodo, mainTodo }, { dispatch }) => {
+    const response = await fetch(`${base_url}/addSubTodo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subTodo, mainTodo }),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
+export const deleteSubTodo = createAsyncThunk(
+  "todo/deleteSubTodo",
+  async ({ subTodoId, mainTodoId }, { dispatch }) => {
+    const response = await fetch(`${base_url}/deleteSubTodo`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subTodoId, mainTodoId }),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
+export const completedSubTodo = createAsyncThunk(
+  "todo/completedSubTodo",
+  async ({ subTodoId, mainTodoId }, { dispatch }) => {
+    console.log("subTodoId  : ", subTodoId);
+    console.log("mainTodoId  : ", mainTodoId);
+    const response = await fetch(`${base_url}/completedSubTodo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subTodoId, mainTodoId }),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
 const todoReducer = createSlice({
   name: "todo",
   initialState: {
@@ -80,6 +136,9 @@ const todoReducer = createSlice({
     dialog: false,
     deleteInfo: null,
     linearProgressLoader: false,
+    modal: false,
+    mainTodoInfo: null,
+    currentDeleteOperation: null,
   },
 
   reducers: {
@@ -92,13 +151,29 @@ const todoReducer = createSlice({
     setDeleteInfo(state, action) {
       state.deleteInfo = action.payload;
     },
+
+    openModal(state) {
+      state.modal = true;
+    },
+    closeModal(state) {
+      state.modal = false;
+    },
+    setMainTodoInfo(state, action) {
+      state.mainTodoInfo = action.payload;
+    },
+    setCurrentDeleteOperation(state, action) {
+      state.currentDeleteOperation = action.payload;
+    },
+    startLinearProgressLoader(state) {
+      state.linearProgressLoader = true;
+    },
   },
   extraReducers: (builder) => {
     builder
       // Fetch
       .addCase(fetchTodos.pending, (state, action) => {
         console.log("fetchTodos pending", action);
-        state.linearProgressLoader = true;
+        // state.linearProgressLoader = true;
       })
       .addCase(fetchTodos.fulfilled, (state, action) => {
         console.log("fetchTodos fulfilled", action);
@@ -141,9 +216,31 @@ const todoReducer = createSlice({
       })
       .addCase(completedTodo.rejected, (state, action) => {
         console.log("completedTodo rejected", action);
+      })
+
+      // Add Sub Todo
+      .addCase(addSubTodo.pending, (state, action) => {
+        console.log("completedTodo pending", action);
+      })
+      .addCase(addSubTodo.fulfilled, (state, action) => {
+        console.log("completedTodo fulfilled", action);
+        state.modal = false;
+      })
+      .addCase(addSubTodo.rejected, (state, action) => {
+        console.log("completedTodo rejected", action);
+        state.modal = false;
       });
   },
 });
 
-export const { openDialog, closeDialog, setDeleteInfo } = todoReducer.actions;
+export const {
+  openDialog,
+  closeDialog,
+  setDeleteInfo,
+  openModal,
+  closeModal,
+  setMainTodoInfo,
+  setCurrentDeleteOperation,
+  startLinearProgressLoader,
+} = todoReducer.actions;
 export default todoReducer.reducer;
