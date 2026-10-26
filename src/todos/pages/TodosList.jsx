@@ -24,7 +24,7 @@ function TodosList() {
   };
   return (
     <>
-      <div className="row mt-2">
+      <div className="row mt-2 mb-5">
         {linearProgressLoader && (
           <div className="row">
             <div className="col-md-12">
