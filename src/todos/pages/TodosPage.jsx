@@ -3,9 +3,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import validationSchema from "../js/validationSchema";
 import { useDispatch, useSelector } from "react-redux";
 import TodosList from "./TodosList";
-import { addTodo, fetchTodos } from "../../store-features/todos/todoSlice";
+import {
+  addTodo,
+  fetchTodos,
+  startLinearProgressLoader,
+} from "../../store-features/todos/todoSlice";
 import { useEffect } from "react";
 import DialogElement from "../components/DialogElement";
+import ModalElement from "../components/ModalElement";
 
 function TodosPage() {
   const {
@@ -19,11 +24,12 @@ function TodosPage() {
 
   const dispatch = useDispatch();
 
-  const { dialog, linearProgressLoader } = useSelector(
+  const { dialog, linearProgressLoader, modal } = useSelector(
     (state) => state.todoReducer,
   );
 
   useEffect(() => {
+    dispatch(startLinearProgressLoader());
     dispatch(fetchTodos());
   }, [dispatch]);
 
@@ -35,6 +41,7 @@ function TodosPage() {
 
   return (
     <>
+      {modal && <ModalElement />}
       {dialog && <DialogElement />}
       <div className="container mt-3 mt-md-5">
         <div className="row justify-content-center">

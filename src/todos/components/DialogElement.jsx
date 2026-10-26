@@ -5,7 +5,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import Slide from "@mui/material/Slide";
-import { closeDialog, deleteTodo } from "../../store-features/todos/todoSlice";
+import {
+  closeDialog,
+  deleteTodo,
+  deleteSubTodo,
+} from "../../store-features/todos/todoSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -15,9 +19,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertDialogSlide() {
   const [open] = React.useState(true);
   const dispatch = useDispatch();
-  //   const state = useSelector((state) => state.todoReducer);
-  //   console.log(state);
-  const { deleteInfo } = useSelector((state) => state.todoReducer);
+  const state = useSelector((state) => state.todoReducer);
+  console.log("IN Dialog : ", state);
+  const { deleteInfo, currentDeleteOperation } = useSelector(
+    (state) => state.todoReducer,
+  );
 
   const handleClose = () => {
     dispatch(closeDialog());
@@ -25,7 +31,17 @@ export default function AlertDialogSlide() {
 
   const handleConfirm = () => {
     dispatch(closeDialog());
-    dispatch(deleteTodo(deleteInfo));
+    if (currentDeleteOperation == "deleteSubTodo") {
+      // console.log("deleteSubTodo : ", deleteInfo);
+      dispatch(
+        deleteSubTodo({
+          subTodoId: deleteInfo["_id"],
+          mainTodoId: deleteInfo["mainTodoId"],
+        }),
+      );
+    } else {
+      dispatch(deleteTodo(deleteInfo));
+    }
   };
 
   return (
