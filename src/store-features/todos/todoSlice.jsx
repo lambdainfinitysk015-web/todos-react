@@ -129,6 +129,42 @@ export const completedSubTodo = createAsyncThunk(
   },
 );
 
+export const updateTodo = createAsyncThunk(
+  "todo/updateTodo",
+  async ({ todo }, { dispatch }) => {
+    const response = await fetch(`${base_url}/updateTodo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
+export const updateSubTodo = createAsyncThunk(
+  "todo/updateSubTodo",
+  async ({ todo }, { dispatch }) => {
+    const response = await fetch(`${base_url}/updateSubTodo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    });
+    const result = await response.json();
+    if (result.status == "success") {
+      dispatch(fetchTodos());
+    }
+    return result;
+  },
+);
+
 const todoReducer = createSlice({
   name: "todo",
   initialState: {
@@ -139,6 +175,7 @@ const todoReducer = createSlice({
     modal: false,
     mainTodoInfo: null,
     currentDeleteOperation: null,
+    modalFormType: "options",
   },
 
   reducers: {
@@ -166,6 +203,12 @@ const todoReducer = createSlice({
     },
     startLinearProgressLoader(state) {
       state.linearProgressLoader = true;
+    },
+    setModalFormType(state, action) {
+      state.modalFormType = action.payload;
+    },
+    resetModalFormType(state) {
+      state.modalFormType = "options";
     },
   },
   extraReducers: (builder) => {
@@ -229,6 +272,32 @@ const todoReducer = createSlice({
       .addCase(addSubTodo.rejected, (state, action) => {
         console.log("completedTodo rejected", action);
         state.modal = false;
+      })
+
+      // Update Todo
+      .addCase(updateTodo.pending, (state, action) => {
+        console.log("updateTodo pending", action);
+      })
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        console.log("updateTodo fulfilled", action);
+        state.modal = false;
+      })
+      .addCase(updateTodo.rejected, (state, action) => {
+        console.log("updateTodo rejected", action);
+        state.modal = false;
+      })
+
+      // Update Sub Todo
+      .addCase(updateSubTodo.pending, (state, action) => {
+        console.log("updateTodo pending", action);
+      })
+      .addCase(updateSubTodo.fulfilled, (state, action) => {
+        console.log("updateTodo fulfilled", action);
+        state.modal = false;
+      })
+      .addCase(updateSubTodo.rejected, (state, action) => {
+        console.log("updateTodo rejected", action);
+        state.modal = false;
       });
   },
 });
@@ -242,5 +311,7 @@ export const {
   setMainTodoInfo,
   setCurrentDeleteOperation,
   startLinearProgressLoader,
+  setModalFormType,
+  resetModalFormType,
 } = todoReducer.actions;
 export default todoReducer.reducer;

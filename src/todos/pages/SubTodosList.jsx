@@ -4,6 +4,9 @@ import {
   setDeleteInfo,
   openDialog,
   setCurrentDeleteOperation,
+  setMainTodoInfo,
+  openModal,
+  setModalFormType,
 } from "../../store-features/todos/todoSlice";
 
 function SubTodosList({ subTodos = [], mainTodoId }) {
@@ -13,10 +16,16 @@ function SubTodosList({ subTodos = [], mainTodoId }) {
     dispatch(completedSubTodo({ subTodoId, mainTodoId }));
   };
 
-  const hanleDeleteSubTodo = (data) => {
+  const handleDeleteSubTodo = (data) => {
     dispatch(openDialog());
     dispatch(setDeleteInfo({ ...data, mainTodoId: mainTodoId }));
     dispatch(setCurrentDeleteOperation("deleteSubTodo"));
+  };
+
+  const handleEditSubTodo = (data) => {
+    dispatch(setModalFormType("editSubTodo"));
+    dispatch(openModal());
+    dispatch(setMainTodoInfo({ ...data, mainTodoId: mainTodoId }));
   };
 
   return (
@@ -25,10 +34,16 @@ function SubTodosList({ subTodos = [], mainTodoId }) {
         return (
           <div key={index}>
             <ul className="list-group">
-              <li className="list-group-item" style={{ paddingRight: "30px" }}>
+              <li
+                className="list-group-item"
+                style={{
+                  paddingRight: "30px",
+                  boxShadow: "0px 1px 7px 1px grey",
+                }}
+              >
                 <div className="row">
                   <div
-                    className="col-10 col-md-10 text-break"
+                    className="col-9 col-md-9 text-break"
                     style={{
                       textDecoration: row.completed ? "line-through" : "none",
                     }}
@@ -56,7 +71,18 @@ function SubTodosList({ subTodos = [], mainTodoId }) {
                         color: "red",
                         cursor: "pointer",
                       }}
-                      onClick={() => hanleDeleteSubTodo(row)}
+                      onClick={() => handleDeleteSubTodo(row)}
+                    ></i>
+                  </div>
+
+                  <div className="col-1 col-md-1 text-center">
+                    <i
+                      className="bi bi-pencil"
+                      style={{
+                        color: "black",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleEditSubTodo(row)}
                     ></i>
                   </div>
                 </div>
