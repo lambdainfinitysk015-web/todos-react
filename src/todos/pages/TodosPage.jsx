@@ -11,6 +11,7 @@ import {
 import { useEffect } from "react";
 import DialogElement from "../components/DialogElement";
 import ModalElement from "../components/ModalElement";
+const production_server = import.meta.env.VITE_PRODUCTION_SERVER;
 
 function TodosPage() {
   const {
@@ -31,6 +32,12 @@ function TodosPage() {
   useEffect(() => {
     dispatch(startLinearProgressLoader());
     dispatch(fetchTodos());
+    if (production_server == 1) {
+      document.addEventListener("visibilitychange", () => {
+        dispatch(startLinearProgressLoader());
+        dispatch(fetchTodos());
+      });
+    }
   }, [dispatch]);
 
   const handleAddTodo = (data) => {
