@@ -34,6 +34,7 @@ function TodosPage() {
     dispatch(fetchTodos());
     if (production_server == 1) {
       document.addEventListener("visibilitychange", () => {
+        console.log("visibilitychange");
         dispatch(startLinearProgressLoader());
         dispatch(fetchTodos());
       });
